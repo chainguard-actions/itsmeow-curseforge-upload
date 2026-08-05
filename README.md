@@ -8,6 +8,8 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 
 | Version | Tag | Upstream commit |
 |---------|-----|-----------------|
+| v2 | [`v2`](https://github.com/chainguard-actions/itsmeow-curseforge-upload/tree/v2) | [`82324ef`](https://github.com/itsmeow/curseforge-upload/commit/82324ef2724f658ce01c4ee734f660c62f661863) |
+| v3.0.0 | [`v3.0.0`](https://github.com/chainguard-actions/itsmeow-curseforge-upload/tree/v3.0.0) | [`3c78af1`](https://github.com/itsmeow/curseforge-upload/commit/3c78af1b2e009b4bc866bfc53c130cc5830222b7) |
 | v3.1.2 | [`v3.1.2`](https://github.com/chainguard-actions/itsmeow-curseforge-upload/tree/v3.1.2) | [`1493c44`](https://github.com/itsmeow/curseforge-upload/commit/1493c4408b462f2ad8beb600f09c505e0c158397) |
 
 ## Privacy
