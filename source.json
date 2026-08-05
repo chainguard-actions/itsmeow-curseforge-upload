@@ -1,6 +1,16 @@
 {
   "owner": "itsmeow",
   "repo": "curseforge-upload",
-  "version": "",
-  "url": "https://github.com/itsmeow/curseforge-upload"
+  "version": "v3.0.0",
+  "commit_sha": "3c78af1b2e009b4bc866bfc53c130cc5830222b7",
+  "url": "https://github.com/itsmeow/curseforge-upload",
+  "policy_sha": "d636be7e43ef829af6e853da6b3c7566db9f72fe",
+  "test_policy_sha": "843adf9e4b8f85d0c08b27b9d0b09dd094b54702",
+  "test_agent_version": "2",
+  "harden_agent_version": "2",
+  "node_artifact": {
+    "gcs_uri": "gs://prod-actions-node-artifacts/node-artifacts/itsmeow/curseforge-upload/v3.0.0/sha256-46c0a623f7700378a8e6d460b6f99d3e06dbd6109391951f2ee8859c7e141832.tar.gz",
+    "sha256": "46c0a623f7700378a8e6d460b6f99d3e06dbd6109391951f2ee8859c7e141832",
+    "size_bytes": 1028590
+  }
 }

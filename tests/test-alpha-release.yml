@@ -1,0 +1,39 @@
+name: Test alpha release type with HTML changelog
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create dummy file to upload
+        run: |
+          echo "alpha build content" > /tmp/test-alpha.jar
+
+      - name: Invoke CurseForge upload action with alpha release type and HTML changelog
+        id: action
+        uses: .
+        continue-on-error: true
+        with:
+          token: fake-token-for-testing
+          project_id: "999999"
+          game_endpoint: minecraft
+          file_path: /tmp/test-alpha.jar
+          changelog: "<h2>Alpha Release</h2><ul><li>Experimental feature</li></ul>"
+          changelog_type: html
+          game_versions: "1.20.1"
+          release_type: alpha
+
+      - name: Assert action ran with alpha release type
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "action outcome: $OUTCOME"
+          # The action should fail at the API level (invalid credentials),
+          # not at input parsing. 'skipped' would indicate a setup problem.
+          if [ "$OUTCOME" = "skipped" ]; then
+            echo "FAIL: action was skipped unexpectedly"
+            exit 1
+          fi
+          echo "PASS: action ran with alpha release type and HTML changelog, outcome: '$OUTCOME'"

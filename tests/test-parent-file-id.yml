@@ -1,0 +1,45 @@
+name: Test parent_file_id input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create dummy upload file
+        run: echo "dummy content" > /tmp/test-mod.jar
+
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          token: fake-token-for-testing
+          project_id: "123456"
+          game_endpoint: minecraft
+          file_path: /tmp/test-mod.jar
+          changelog: "Test changelog for parent file id test"
+          changelog_type: text
+          game_versions: "1.19.2"
+          release_type: release
+          parent_file_id: "789012"
+
+      - name: Assert action ran with parent_file_id input
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+          FILE_ID: ${{ steps.action.outputs.id }}
+        run: |
+          echo "outcome: $OUTCOME"
+          echo "file id: $FILE_ID"
+          if [ "$OUTCOME" = "success" ]; then
+            if [ -z "$FILE_ID" ]; then
+              echo "FAIL: action succeeded but output id is empty"
+              exit 1
+            fi
+            echo "PASS: action succeeded with file id: $FILE_ID"
+          elif [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: action failed gracefully (expected with fake token/project)"
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi

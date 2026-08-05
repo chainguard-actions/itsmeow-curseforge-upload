@@ -1,0 +1,13 @@
+{
+  "status": "unbundlable",
+  "entries": [
+    {
+      "path": "curseforge-upload.js",
+      "status": "unbundlable",
+      "reason": "indirect-require: Indirect calls to \"require\" will not be bundled",
+      "warnings": [
+        "indirect-require: Indirect calls to \"require\" will not be bundled"
+      ]
+    }
+  ]
+}
