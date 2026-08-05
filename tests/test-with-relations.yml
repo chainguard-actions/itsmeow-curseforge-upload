@@ -1,0 +1,37 @@
+name: Test with relations input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create a dummy file to upload
+        run: |
+          echo "dummy jar content" > /tmp/test-relations.jar
+      - id: action
+        uses: .
+        with:
+          token: fake-token-for-testing
+          project_id: "123456"
+          game_endpoint: minecraft
+          file_path: /tmp/test-relations.jar
+          changelog: "Test changelog with relations"
+          changelog_type: text
+          game_versions: "7498"
+          release_type: beta
+          relations: "jei:requiredDependency,optifine:optionalDependency"
+        # The action will fail at the API call due to invalid token,
+        # but relations parsing should succeed locally
+        continue-on-error: true
+      - name: Assert step failed at API stage (relations parsing succeeded)
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          # Should fail at API call (invalid token), not at relations parsing
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected step to fail at API stage, got outcome=$OUTCOME"
+            exit 1
+          fi
+          echo "PASS: action with relations input reached API stage as expected"

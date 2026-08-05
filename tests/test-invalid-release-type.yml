@@ -1,0 +1,34 @@
+name: Test invalid release type validation
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create a dummy file to upload
+        run: |
+          echo "dummy content" > /tmp/test-upload.jar
+      - id: action
+        uses: .
+        with:
+          token: fake-token-for-testing
+          project_id: "123456"
+          game_endpoint: minecraft
+          file_path: /tmp/test-upload.jar
+          changelog: "Test changelog"
+          changelog_type: text
+          game_versions: "7498"
+          release_type: invalid-type
+        # The action calls core.setFailed for invalid release_type
+        continue-on-error: true
+      - name: Assert step failed due to invalid release type
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected step to fail with invalid release_type, got outcome=$OUTCOME"
+            exit 1
+          fi
+          echo "PASS: action correctly failed with invalid release_type"

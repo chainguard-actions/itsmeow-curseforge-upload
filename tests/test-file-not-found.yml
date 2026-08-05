@@ -1,0 +1,31 @@
+name: Test file not found error
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          token: fake-token-for-testing
+          project_id: "123456"
+          game_endpoint: minecraft
+          file_path: /nonexistent/path/to/file.jar
+          changelog: "Test changelog"
+          changelog_type: text
+          game_versions: "7498"
+          release_type: release
+        # The action calls core.setFailed when file is not found, so the step will fail
+        continue-on-error: true
+      - name: Assert step failed due to missing file
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected step to fail when file does not exist, got outcome=$OUTCOME"
+            exit 1
+          fi
+          echo "PASS: action correctly failed when file was not found"

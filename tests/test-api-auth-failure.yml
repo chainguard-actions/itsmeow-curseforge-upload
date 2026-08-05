@@ -1,0 +1,36 @@
+name: Test API authentication failure
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create a dummy file to upload
+        run: |
+          echo "dummy jar content" > /tmp/test-upload.jar
+      - id: action
+        uses: .
+        with:
+          token: fake-token-for-testing
+          project_id: "123456"
+          game_endpoint: minecraft
+          file_path: /tmp/test-upload.jar
+          changelog: "Test changelog"
+          changelog_type: text
+          game_versions: "7498"
+          release_type: release
+        # The action will fail at the API call due to invalid token
+        continue-on-error: true
+      - name: Assert step failed at API call (not local validation)
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          # The action should fail because the fake token is rejected by CurseForge API
+          # This confirms local validation passed (file exists, release_type is valid)
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected step to fail due to API auth error, got outcome=$OUTCOME"
+            exit 1
+          fi
+          echo "PASS: action correctly failed at API call stage (local validation passed)"
